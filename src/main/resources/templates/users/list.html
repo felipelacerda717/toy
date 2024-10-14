@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head(~{::title})">
+    <title>Lista de Usuários</title>
+</head>
+<body>
+    <nav th:replace="layout :: nav"></nav>
+
+    <div class="container mt-4">
+        <h1>Lista de Usuários</h1>
+        <a href="/users/create" class="btn btn-primary mb-3">Criar Novo Usuário</a>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.username}"></td>
+                    <td th:text="${user.role}"></td>
+                    <td>
+                        <a th:href="@{/users/edit/{id}(id=${user.id})}" class="btn btn-sm btn-warning">Editar</a>
+                        <a th:href="@{/users/delete/{id}(id=${user.id})}" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir este usuário?')">Excluir</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer th:replace="layout :: footer"></footer>
+</body>
+</html>
