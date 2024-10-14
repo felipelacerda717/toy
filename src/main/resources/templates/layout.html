@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:fragment="head(title)">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loja de Brinquedos - <th:block th:include=":: title"></th:block></title>
+    <title th:replace="${title}">Loja de Brinquedos</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav th:fragment="nav" class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/">Loja de Brinquedos</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -28,18 +28,16 @@
         </div>
     </nav>
 
-    <div class="container mt-4">
-        <th:block th:include=":: content"></th:block>
-    </div>
-
-    <footer class="footer mt-auto py-3 bg-light">
+    <footer th:fragment="footer" class="footer mt-auto py-3 bg-light">
         <div class="container text-center">
             <span class="text-muted">© 2024 Loja de Brinquedos. Todos os direitos reservados.</span>
         </div>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <th:block th:fragment="scripts">
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </th:block>
 </body>
 </html>

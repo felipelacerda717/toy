@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head(~{::title})">
+    <title>Bem-vindo à Loja de Brinquedos</title>
+</head>
+<body>
+    <nav th:replace="layout :: nav"></nav>
+
+    <div class="container mt-4">
+        <h1>Bem-vindo à Loja de Brinquedos</h1>
+        <p class="lead">Descubra nossa incrível seleção de brinquedos para todas as idades!</p>
+
+        <h2 class="mt-5">Produtos em Destaque</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4" th:each="product : ${featuredProducts}">
+                <div class="card">
+                    <img th:src="${product.imageUrl}" class="card-img-top" alt="Imagem do produto">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${product.name}">Nome do Produto</h5>
+                        <p class="card-text" th:text="${#numbers.formatCurrency(product.price)}">R$ 0,00</p>
+                        <a th:href="@{/products/{id}(id=${product.id})}" class="btn btn-primary">Ver Detalhes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="layout :: footer"></footer>
+    <th:block th:replace="layout :: scripts"></th:block>
+</body>
+</html>
