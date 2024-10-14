@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,7 +19,7 @@ public class User {
     @Column(nullable = false)
     private String role;
 
-    // Construtores, getters e setters
+    // Construtores
 
     public User() {}
 
@@ -28,7 +29,8 @@ public class User {
         this.role = role;
     }
 
-    // Getters e setters
+    // Getters e Setters
+
     public Long getId() {
         return id;
     }

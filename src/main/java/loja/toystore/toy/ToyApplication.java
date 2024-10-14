@@ -1,12 +1,11 @@
 package loja.toystore.toy;
 
 import loja.toystore.toy.model.User;
-import loja.toystore.toy.repository.UserRepository;
+import loja.toystore.toy.service.UserService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 public class ToyApplication {
@@ -16,16 +15,14 @@ public class ToyApplication {
     }
 
     @Bean
-    public CommandLineRunner initializeDatabase(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public CommandLineRunner initializeDatabase(UserService userService) {
         return args -> {
-            if (userRepository.findByUsername("admin").isEmpty()) {
-                User adminUser = new User(
-                    "admin",
-                    passwordEncoder.encode("adminpassword"),
-                    "ADMIN"
-                );
-                userRepository.save(adminUser);
+            if (userService.findByUsername("admin").isEmpty()) {
+                User adminUser = new User("admin", "adminpassword", "ADMIN");
+                userService.createUser(adminUser);
                 System.out.println("Admin user has been initialized.");
+            } else {
+                System.out.println("Admin user already exists.");
             }
         };
     }
