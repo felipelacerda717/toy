@@ -32,9 +32,9 @@ public class ToyApplication {
 
             // Inicialização de produtos de exemplo
             if (productService.getAllProducts().isEmpty()) {
-                productService.saveProduct(new Product("Boneca", "Boneca de pano", new BigDecimal("39.99"), "Brinquedos", "url_da_imagem"));
-                productService.saveProduct(new Product("Carrinho", "Carrinho de controle remoto", new BigDecimal("59.99"), "Brinquedos", "url_da_imagem"));
-                productService.saveProduct(new Product("Quebra-cabeça", "Quebra-cabeça de 1000 peças", new BigDecimal("29.99"), "Jogos", "url_da_imagem"));
+                productService.saveProduct(new Product("Boneca", "Boneca de pano", new BigDecimal("39.99"), "Brinquedos", "/images/boneca.jpg"));
+                productService.saveProduct(new Product("Carrinho", "Carrinho de controle remoto", new BigDecimal("59.99"), "Brinquedos", "/images/carrinho.jpg"));
+                productService.saveProduct(new Product("Quebra-cabeça", "Quebra-cabeça de 1000 peças", new BigDecimal("29.99"), "Jogos", "/images/quebra-cabeca.jpg"));
                 System.out.println("Sample products have been initialized.");
             } else {
                 System.out.println("Products already exist.");

@@ -3,11 +3,18 @@ package loja.toystore.toy.controller;
 import loja.toystore.toy.model.Product;
 import loja.toystore.toy.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+
 
 @Controller
 @RequestMapping("/products")
@@ -20,47 +27,82 @@ public class ProductController {
         this.productService = productService;
     }
 
-    // Exibe todos os produtos
+    // Exibe todos os produtos no catálogo
     @GetMapping
     public String listProducts(Model model) {
         List<Product> products = productService.getAllProducts();
         model.addAttribute("products", products);
-        return "products/catalog"; // Atualizei o retorno para "products/catalog"
+        return "products/catalog"; // Retorna a página do catálogo
     }
 
     // Exibe detalhes de um produto específico
     @GetMapping("/{id}")
     public String viewProduct(@PathVariable Long id, Model model) {
-        productService.getProductById(id).ifPresent(product -> model.addAttribute("product", product));
-        return "products/view";
+        return productService.getProductById(id)
+                .map(product -> {
+                    model.addAttribute("product", product);
+                    return "products/view"; // Página de detalhes do produto
+                })
+                .orElse("redirect:/products");
     }
 
-    // Exibe o formulário para adicionar um novo produto
-    @GetMapping("/new")
+    // Exibe o formulário para adicionar um novo produto (Admin)
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/admin/new")
     public String newProductForm(Model model) {
         model.addAttribute("product", new Product());
-        return "products/form"; // Atualizei o retorno para "products/form"
+        return "products/admin/form"; // Formulário de novo produto
     }
 
-    // Salva ou atualiza um produto
-    @PostMapping("/save")
-    public String saveProduct(@ModelAttribute Product product) {
+    // Salva ou atualiza um produto (Admin)
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/admin/save")
+    public String saveProduct(@ModelAttribute Product product, @RequestParam("imageFile") MultipartFile imageFile) {
+        if (!imageFile.isEmpty()) {
+            try {
+                // Gere um nome de arquivo único
+                String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
+                // Defina o caminho onde a imagem será salva
+                Path path = Paths.get("src/main/resources/static/images/" + fileName);
+                // Salve o arquivo
+                Files.write(path, imageFile.getBytes());
+                // Atualize o imageUrl do produto
+                product.setImageUrl("/images/" + fileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Trate o erro adequadamente
+            }
+        }
         productService.saveProduct(product);
-        return "redirect:/products";
+        return "redirect:/products/admin";
     }
 
-    // Exibe o formulário para editar um produto existente
-    @GetMapping("/edit/{id}")
+    // Exibe o formulário para editar um produto existente (Admin)
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/admin/edit/{id}")
     public String editProductForm(@PathVariable Long id, Model model) {
-        productService.getProductById(id).ifPresent(product -> model.addAttribute("product", product));
-        return "products/form"; // Atualizei o retorno para "products/form"
+        return productService.getProductById(id)
+                .map(product -> {
+                    model.addAttribute("product", product);
+                    return "products/admin/form"; // Formulário de edição do produto
+                })
+                .orElse("redirect:/products/admin");
     }
 
-    // Deleta um produto pelo ID
-    @GetMapping("/delete/{id}")
+    // Deleta um produto pelo ID (Admin)
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/admin/delete/{id}")
     public String deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
-        return "redirect:/products";
+        return "redirect:/products/admin"; // Redireciona após deletar o produto
+    }
+
+    // Exibe a lista de produtos na visão de administração (Admin)
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/admin")
+    public String adminProductList(Model model) {
+        model.addAttribute("products", productService.getAllProducts());
+        return "products/admin/list"; // Página de administração dos produtos
     }
 
     // Exibe os produtos de uma categoria específica
@@ -69,7 +111,7 @@ public class ProductController {
         List<Product> products = productService.getProductsByCategory(category);
         model.addAttribute("products", products);
         model.addAttribute("category", category);
-        return "products/category"; // Atualizei o retorno para "products/category"
+        return "products/category"; // Página de produtos filtrados por categoria
     }
 
     // Pesquisa produtos pelo nome
@@ -78,6 +120,6 @@ public class ProductController {
         List<Product> products = productService.searchProductsByName(query);
         model.addAttribute("products", products);
         model.addAttribute("query", query);
-        return "products/search"; // Atualizei o retorno para "products/search"
+        return "products/search"; // Página de resultados da pesquisa
     }
 }
