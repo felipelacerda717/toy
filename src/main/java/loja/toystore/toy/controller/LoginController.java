@@ -10,15 +10,10 @@ import org.springframework.ui.Model; // Add this import statement
 public class LoginController {
 
     @GetMapping("/login")
-    public String login(@RequestParam(required = false) String checkout, Model model) {
-        if (checkout != null) {
-            model.addAttribute("checkout", true);
+    public String login(@RequestParam(required = false) String targetUrl, Model model) {
+        if (targetUrl != null && !targetUrl.isEmpty()) {
+            model.addAttribute("targetUrl", targetUrl);
         }
         return "login";
-    }
-
-    @GetMapping("/login-success")
-    public String loginSuccess(@RequestParam(required = false) String checkout) {
-        return checkout != null ? "redirect:/checkout" : "redirect:/";
     }
 }

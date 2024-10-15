@@ -30,6 +30,14 @@ public class ToyApplication {
                 System.out.println("Admin user already exists.");
             }
 
+            if (userService.findByUsername("cliente").isEmpty()) {
+                User clientUser = new User("cliente", "clientepassword", "USER");
+                userService.createUser(clientUser);
+                System.out.println("Client user has been initialized.");
+            } else {
+                System.out.println("Client user already exists.");
+            }
+
             // Inicialização de produtos de exemplo
             if (productService.getAllProducts().isEmpty()) {
                 productService.saveProduct(new Product("Boneca", "Boneca de pano", new BigDecimal("39.99"), "Brinquedos", "/images/boneca.jpg"));
