@@ -116,10 +116,12 @@ public class ProductController {
 
     // Pesquisa produtos pelo nome
     @GetMapping("/search")
-    public String searchProducts(@RequestParam String query, Model model) {
-        List<Product> products = productService.searchProductsByName(query);
-        model.addAttribute("products", products);
-        model.addAttribute("query", query);
-        return "products/search"; // Página de resultados da pesquisa
+    public String searchProducts(@RequestParam("query") String query, Model model) {
+        List<Product> searchResults = productService.searchProducts(query);
+        model.addAttribute("products", searchResults);
+        model.addAttribute("searchQuery", query);
+        return "products/search-results";
     }
+
+    
 }

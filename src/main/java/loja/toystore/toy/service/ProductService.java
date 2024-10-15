@@ -74,4 +74,8 @@ public class ProductService {
                 .distinct()
                 .collect(Collectors.toList());
     }
+
+    public List<Product> searchProducts(String query) {
+        return productRepository.findByNameContainingIgnoreCase(query);
+    }
 }
