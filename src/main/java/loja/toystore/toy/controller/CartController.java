@@ -5,10 +5,13 @@ import loja.toystore.toy.service.ProductService;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
+ 
 
 @Controller
 @RequestMapping("/cart")
@@ -22,6 +25,8 @@ public class CartController {
     public CartController(CartService cartService, ProductService productService) {
         this.cartService = cartService;
         this.productService = productService;
+
+
     }
 
     @GetMapping
@@ -54,5 +59,13 @@ public class CartController {
     public String clearCart() {
         cartService.clear();
         return "redirect:/cart";
+    }
+
+    @GetMapping("/checkout")
+    public String checkout(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+        return "redirect:/checkout";
     }
 }

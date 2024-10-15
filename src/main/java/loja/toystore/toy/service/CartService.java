@@ -1,7 +1,12 @@
 package loja.toystore.toy.service;
 
 import loja.toystore.toy.model.CartItem;
+import loja.toystore.toy.model.OrderItem;
 import loja.toystore.toy.model.Product;
+import loja.toystore.toy.model.User;
+import loja.toystore.toy.model.Order;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
 
@@ -13,6 +18,13 @@ import java.util.List;
 @SessionScope
 public class CartService {
     private List<CartItem> items = new ArrayList<>();
+    private final OrderService orderService;
+
+     @Autowired
+    public CartService(OrderService orderService) {
+        this.orderService = orderService;
+  
+    }
 
     public void addItem(Product product, int quantity) {
         for (CartItem item : items) {
@@ -49,5 +61,23 @@ public class CartService {
         return items.stream()
                 .map(CartItem::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public Order checkout(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (CartItem cartItem : items) {
+            OrderItem orderItem = new OrderItem();
+            orderItem.setProduct(cartItem.getProduct());
+            orderItem.setQuantity(cartItem.getQuantity());
+            orderItem.setPrice(cartItem.getProduct().getPrice());
+            orderItems.add(orderItem);
+        }
+
+        Order order = orderService.createOrder(user, orderItems);
+        clear(); // Limpa o carrinho após o checkout
+        return order;
     }
 }

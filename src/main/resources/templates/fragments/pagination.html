@@ -1,0 +1,20 @@
+<!-- src/main/resources/templates/fragments/pagination.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <nav th:fragment="pagination">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${currentPage == 0} ? disabled">
+                <a class="page-link" th:href="@{${url}(page=${currentPage - 1}, size=${size})}">&laquo;</a>
+            </li>
+            <li class="page-item" th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
+                th:classappend="${pageNumber == currentPage} ? active">
+                <a class="page-link" th:href="@{${url}(page=${pageNumber}, size=${size})}" th:text="${pageNumber + 1}"></a>
+            </li>
+            <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? disabled">
+                <a class="page-link" th:href="@{${url}(page=${currentPage + 1}, size=${size})}">&raquo;</a>
+            </li>
+        </ul>
+    </nav>
+</body>
+</html>

@@ -13,24 +13,24 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(authorizeRequests ->
-                authorizeRequests
-                    .requestMatchers("/", "/home", "/products", "/products/**", "/css/**", "/js/**", "/images/**", "/cart/**").permitAll()
-                    .requestMatchers("/products/admin/**").hasRole("ADMIN")
-                    .anyRequest().authenticated()
+            .authorizeHttpRequests(authz -> authz
+                .requestMatchers("/", "/home", "/products", "/products/**", "/css/**", "/js/**", "/images/**", "/cart/**", "/checkout").permitAll()
+                .requestMatchers("/checkout/process").authenticated()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
             )
-            .formLogin(formLogin ->
-                formLogin
-                    .loginPage("/login")
-                    .permitAll()
+            .formLogin(form -> form
+                .loginPage("/login")
+                .permitAll()
+                .defaultSuccessUrl("/checkout", true)
             )
-            .logout(logout ->
-                logout
-                    .permitAll()
+            .logout(logout -> logout
+                .permitAll()
             );
-
         return http.build();
     }
+
+    // ... outros beans ...
 }

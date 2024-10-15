@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,21 +29,13 @@ public class ProductController {
         this.productService = productService;
     }
 
-    // Exibe todos os produtos no catálogo
-    @GetMapping
-    public String listProducts(Model model) {
-        List<Product> products = productService.getAllProducts();
-        model.addAttribute("products", products);
-        return "products/catalog"; // Retorna a página do catálogo
-    }
-
     // Exibe detalhes de um produto específico
     @GetMapping("/{id}")
     public String viewProduct(@PathVariable Long id, Model model) {
         return productService.getProductById(id)
                 .map(product -> {
                     model.addAttribute("product", product);
-                    return "products/view"; // Página de detalhes do produto
+                    return "products/view";
                 })
                 .orElse("redirect:/products");
     }
@@ -114,11 +108,29 @@ public class ProductController {
         return "products/category"; // Página de produtos filtrados por categoria
     }
 
+    @GetMapping
+    public String listProducts(@RequestParam(defaultValue = "0") int page, 
+                               @RequestParam(defaultValue = "10") int size,
+                               Model model) {
+        Page<Product> productPage = productService.getAllProducts(PageRequest.of(page, size));
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("totalItems", productPage.getTotalElements());
+        return "products/list";
+    }
+
     // Pesquisa produtos pelo nome
     @GetMapping("/search")
-    public String searchProducts(@RequestParam("query") String query, Model model) {
-        List<Product> searchResults = productService.searchProducts(query);
-        model.addAttribute("products", searchResults);
+    public String searchProducts(@RequestParam("query") String query,
+                                 @RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "10") int size,
+                                 Model model) {
+        Page<Product> searchResults = productService.searchProducts(query, PageRequest.of(page, size));
+        model.addAttribute("products", searchResults.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", searchResults.getTotalPages());
+        model.addAttribute("totalItems", searchResults.getTotalElements());
         model.addAttribute("searchQuery", query);
         return "products/search-results";
     }

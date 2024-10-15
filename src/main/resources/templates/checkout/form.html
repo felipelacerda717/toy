@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout :: head(~{::title})">
+    <title>Checkout</title>
+</head>
+<body>
+    <div th:replace="layout :: nav"></div>
+    
+    <div class="container mt-4">
+        <h1>Checkout</h1>
+        
+        <div th:if="${!isAuthenticated}">
+            <p>Por favor, faça login para continuar com o checkout.</p>
+            <a th:href="@{/login?checkout}" class="btn btn-primary">Login</a>
+        </div>
+        
+        <div th:if="${isAuthenticated}">
+            <h2>Itens do Pedido</h2>
+            <ul>
+                <li th:each="item : ${cartItems}">
+                    <span th:text="${item.product.name}"></span>
+                    <span th:text="${item.quantity}"></span>
+                    <span th:text="${#numbers.formatCurrency(item.subtotal)}"></span>
+                </li>
+            </ul>
+            <p>Total: <strong th:text="${#numbers.formatCurrency(total)}"></strong></p>
+            <form th:action="@{/checkout/process}" method="post">
+                <button type="submit" class="btn btn-primary">Confirmar Pedido</button>
+            </form>
+        </div>
+    </div>
+
+    <div th:replace="layout :: footer"></div>
+</body>
+</html>
