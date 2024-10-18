@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head(~{::title})">
+    <title>Histórico de Pedidos</title>
+</head>
+<body>
+    <div th:replace="layout :: nav"></div>
+    
+    <div class="container mt-4">
+        <h1>Histórico de Pedidos</h1>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Número do Pedido</th>
+                    <th>Data</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="order : ${orders}">
+                    <td th:text="${order.id}"></td>
+                    <td th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td th:text="${#numbers.formatCurrency(order.totalAmount)}"></td>
+                    <td th:text="${order.status}"></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <a href="/" class="btn btn-primary">Voltar para a Página Inicial</a>
+    </div>
+
+    <div th:replace="layout :: footer"></div>
+</body>
+</html>

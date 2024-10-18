@@ -1,0 +1,50 @@
+<!-- src/main/resources/templates/products/list.html -->
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head(~{::title})">
+    <title>Catálogo de Produtos</title>
+</head>
+<body>
+    <nav th:replace="layout :: nav"></nav>
+
+    <div class="container mt-4">
+        <h1>Catálogo de Produtos</h1>
+        
+        <div class="row">
+            <div class="col-md-4 mb-4" th:each="product : ${products}">
+                <div class="card">
+                    <img th:src="${product.imageUrl}" class="card-img-top" alt="Imagem do produto">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${product.name}">Nome do Produto</h5>
+                        <p class="card-text" th:text="${#numbers.formatCurrency(product.price)}">R$ 0,00</p>
+                        <a th:href="@{/products/{id}(id=${product.id})}" class="btn btn-primary">Ver Detalhes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paginação -->
+        <nav aria-label="Page navigation" th:if="${totalPages > 1}">
+            <ul class="pagination justify-content-center">
+                <!-- Botão Anterior -->
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/products(page=${currentPage - 1})}" tabindex="-1">Anterior</a>
+                </li>
+                
+                <!-- Números da Página -->
+                <li class="page-item" th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
+                    th:classappend="${pageNumber == currentPage} ? 'active'">
+                    <a class="page-link" th:href="@{/products(page=${pageNumber})}" th:text="${pageNumber + 1}"></a>
+                </li>
+                
+                <!-- Botão Próxima -->
+                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/products(page=${currentPage + 1})}">Próxima</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <footer th:replace="layout :: footer"></footer>
+</body>
+</html>

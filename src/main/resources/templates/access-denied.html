@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head(~{::title})">
+    <title>Acesso Negado</title>
+</head>
+<body>
+    <div th:replace="layout :: nav"></div>
+    
+    <div class="container mt-5">
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Acesso Negado!</h4>
+            <p>Desculpe, você não tem permissão para acessar esta área.</p>
+            <hr>
+            <p class="mb-0">Se você acredita que isto é um erro, por favor, entre em contato com o administrador.</p>
+        </div>
+        <a href="/" class="btn btn-primary">Voltar para a página inicial</a>
+    </div>
+
+    <div th:replace="layout :: footer"></div>
+</body>
+</html>

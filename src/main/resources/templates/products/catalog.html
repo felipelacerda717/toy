@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head(~{::title})">
+    <title>Catálogo de Produtos</title>
+</head>
+<body>
+    <nav th:replace="layout :: nav"></nav>
+
+    <div class="container mt-4">
+        <h1>Catálogo de Produtos</h1>
+        
+        <div class="row">
+            <div class="col-md-4 mb-4" th:each="product : ${products}">
+                <div class="card">
+                    <img th:src="${product.imageUrl}" class="card-img-top" alt="Imagem do produto">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${product.name}">Nome do Produto</h5>
+                        <p class="card-text" th:text="${#numbers.formatCurrency(product.price)}">R$ 0,00</p>
+                        <p class="card-text" th:text="${product.category}">Categoria</p>
+                        <a th:href="@{/products/{id}(id=${product.id})}" class="btn btn-primary">Ver Detalhes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="layout :: footer"></footer>
+</body>
+</html>
