@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-
+import org.springframework.data.domain.Sort;
+import java.math.BigDecimal;
+import java.util.stream.Collectors;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -109,16 +112,41 @@ public class ProductController {
     }
 
     @GetMapping
-    public String listProducts(@RequestParam(defaultValue = "0") int page, 
-                               @RequestParam(defaultValue = "10") int size,
-                               Model model) {
-        Page<Product> productPage = productService.getAllProducts(PageRequest.of(page, size));
-        model.addAttribute("products", productPage.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", productPage.getTotalPages());
-        model.addAttribute("totalItems", productPage.getTotalElements());
-        return "products/list";
+public String listProducts(@RequestParam(required = false) String category,
+                         @RequestParam(required = false) BigDecimal minPrice,
+                         @RequestParam(required = false) BigDecimal maxPrice,
+                         @RequestParam(defaultValue = "0") int page,
+                         @RequestParam(defaultValue = "name,asc") String sort,
+                         Model model) {
+    
+    // Obter direção e propriedade de ordenação
+    String[] sortParams = sort.split(",");
+    String sortProperty = sortParams[0];
+    String sortDirection = sortParams.length > 1 ? sortParams[1] : "asc";
+    Sort.Direction direction = sortDirection.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+    
+    // Criar Pageable com ordenação
+    PageRequest pageable = PageRequest.of(page, 9, Sort.by(direction, sortProperty));
+    
+    // Buscar produtos com filtros
+    Page<Product> productPage;
+    if (category != null && !category.isEmpty()) {
+        productPage = productService.getProductsByCategoryAndPriceRange(category, minPrice, maxPrice, pageable);
+    } else if (minPrice != null || maxPrice != null) {
+        productPage = productService.getProductsByPriceRange(minPrice, maxPrice, pageable);
+    } else {
+        productPage = productService.getAllProducts(pageable);
     }
+
+    // Adicionar atributos ao modelo
+    model.addAttribute("products", productPage.getContent());
+    model.addAttribute("currentPage", page);
+    model.addAttribute("totalPages", productPage.getTotalPages());
+    model.addAttribute("category", category);
+    model.addAttribute("categories", productService.getAllCategories());
+
+    return "products/list";
+}
 
     // Pesquisa produtos pelo nome
     @GetMapping("/search")

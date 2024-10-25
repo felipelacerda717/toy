@@ -6,27 +6,31 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
-
-
 import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-
-    Page<Product> findAll(Pageable pageable);
-    Page<Product> findByNameContainingIgnoreCase(String name, Pageable pageable);
-
-    // Buscar produtos por categoria
+    // Busca paginada por categoria
+    Page<Product> findByCategory(String category, Pageable pageable);
+    
+    // Busca por categoria sem paginação
     List<Product> findByCategory(String category);
-
-    // Buscar produtos por nome (contendo a string de busca, ignorando maiúsculas/minúsculas)
+    
+    // Busca por nome contendo string (case insensitive)
+    Page<Product> findByNameContainingIgnoreCase(String name, Pageable pageable);
     List<Product> findByNameContainingIgnoreCase(String name);
-
-    // Buscar produtos por faixa de preço
-    List<Product> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
-
-    // Buscar produtos por categoria e ordenar por preço
-    List<Product> findByCategoryOrderByPriceAsc(String category);
-
-    // Você pode adicionar mais métodos de consulta personalizados conforme necessário
+    
+    // Busca por faixa de preço
+    Page<Product> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable);
+    
+    // Busca por preço mínimo
+    Page<Product> findByPriceGreaterThanEqual(BigDecimal minPrice, Pageable pageable);
+    
+    // Busca por preço máximo
+    Page<Product> findByPriceLessThanEqual(BigDecimal maxPrice, Pageable pageable);
+    
+    // Busca por categoria e faixa de preço
+    Page<Product> findByCategoryAndPriceBetween(String category, BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable);
+    Page<Product> findByCategoryAndPriceGreaterThanEqual(String category, BigDecimal minPrice, Pageable pageable);
+    Page<Product> findByCategoryAndPriceLessThanEqual(String category, BigDecimal maxPrice, Pageable pageable);
 }

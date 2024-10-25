@@ -7,38 +7,123 @@
     <div th:replace="layout :: nav"></div>
     
     <div class="container mt-4">
-        <h1>Catálogo de Produtos</h1>
-        
         <div class="row">
-            <div th:each="product : ${products}" class="col-md-4 mb-4">
+            <!-- Sidebar com categorias -->
+            <div class="col-md-3">
                 <div class="card">
-                    <img th:src="${product.imageUrl}" class="card-img-top" alt="Imagem do produto">
+                    <div class="card-header">
+                        <h5 class="mb-0">Categorias</h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <a href="/products" class="list-group-item list-group-item-action"
+                           th:classappend="${category == null} ? 'active'">
+                           Todas as Categorias
+                        </a>
+                        <a th:href="@{/products(category=${cat})}" 
+                           th:each="cat : ${categories}"
+                           th:text="${cat}"
+                           class="list-group-item list-group-item-action"
+                           th:classappend="${category != null && category == cat} ? 'active'">
+                            Categoria
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Filtro de preço (opcional) -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">Faixa de Preço</h5>
+                    </div>
                     <div class="card-body">
-                        <h5 class="card-title" th:text="${product.name}">Nome do Produto</h5>
-                        <p class="card-text" th:text="${product.description}">Descrição do produto</p>
-                        <p class="card-text"><strong>Preço: </strong><span th:text="${#numbers.formatCurrency(product.price)}">R$ 0,00</span></p>
-                        <a th:href="@{/products/{id}(id=${product.id})}" class="btn btn-primary">Ver Detalhes</a>
+                        <form th:action="@{/products}" method="get">
+                            <input type="hidden" name="category" th:if="${category}" th:value="${category}">
+                            <div class="mb-3">
+                                <label for="minPrice" class="form-label">Preço Mínimo</label>
+                                <input type="number" class="form-control" id="minPrice" name="minPrice" 
+                                       th:value="${param.minPrice}" min="0" step="0.01">
+                            </div>
+                            <div class="mb-3">
+                                <label for="maxPrice" class="form-label">Preço Máximo</label>
+                                <input type="number" class="form-control" id="maxPrice" name="maxPrice"
+                                       th:value="${param.maxPrice}" min="0" step="0.01">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+                        </form>
                     </div>
                 </div>
             </div>
+
+            <!-- Lista de produtos -->
+            <div class="col-md-9">
+                <!-- Cabeçalho com título e ordenação -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 th:text="${category != null ? category : 'Todos os Produtos'}">Catálogo</h2>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" 
+                                data-bs-toggle="dropdown">
+                            Ordenar por
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" th:href="@{/products(category=${category},sort='price,asc')}">Menor Preço</a></li>
+                            <li><a class="dropdown-item" th:href="@{/products(category=${category},sort='price,desc')}">Maior Preço</a></li>
+                            <li><a class="dropdown-item" th:href="@{/products(category=${category},sort='name,asc')}">Nome (A-Z)</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Grid de produtos -->
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    <div th:each="product : ${products}" class="col">
+                        <div class="card h-100">
+                            <img th:if="${product.imageUrl}" th:src="${product.imageUrl}" 
+                                 class="card-img-top" alt="Imagem do produto" style="height: 200px; object-fit: cover;">
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${product.name}">Nome do Produto</h5>
+                                <p class="card-text" th:text="${#strings.abbreviate(product.description, 100)}">
+                                    Descrição do produto...
+                                </p>
+                                <p class="card-text">
+                                    <strong class="text-primary" th:text="${#numbers.formatCurrency(product.price)}">
+                                        R$ 0,00
+                                    </strong>
+                                </p>
+                                <div class="d-grid gap-2">
+                                    <a th:href="@{/products/{id}(id=${product.id})}" 
+                                       class="btn btn-outline-primary">Ver Detalhes</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mensagem quando não há produtos -->
+                <div th:if="${#lists.isEmpty(products)}" class="alert alert-info text-center">
+                    Nenhum produto encontrado nesta categoria.
+                </div>
+
+                <!-- Paginação -->
+                <nav th:if="${totalPages > 1}" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${currentPage == 0} ? disabled">
+                            <a class="page-link" th:href="@{/products(page=${currentPage - 1}, category=${category})}">Anterior</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" 
+                            th:classappend="${currentPage == i} ? active">
+                            <a class="page-link" th:href="@{/products(page=${i}, category=${category})}" 
+                               th:text="${i + 1}">1</a>
+                        </li>
+                        <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? disabled">
+                            <a class="page-link" th:href="@{/products(page=${currentPage + 1}, category=${category})}">Próxima</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
-        
-        <!-- Paginação -->
-        <nav th:if="${totalPages > 1}">
-            <ul class="pagination justify-content-center">
-                <li class="page-item" th:classappend="${currentPage == 0} ? disabled">
-                    <a class="page-link" th:href="@{/products(page=${currentPage - 1})}">&laquo;</a>
-                </li>
-                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${currentPage == i} ? active">
-                    <a class="page-link" th:href="@{/products(page=${i})}" th:text="${i + 1}"></a>
-                </li>
-                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? disabled">
-                    <a class="page-link" th:href="@{/products(page=${currentPage + 1})}">&raquo;</a>
-                </li>
-            </ul>
-        </nav>
     </div>
 
     <div th:replace="layout :: footer"></div>
+    
+    <!-- Bootstrap JS e dependências -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
