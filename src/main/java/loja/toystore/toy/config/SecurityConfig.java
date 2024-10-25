@@ -20,7 +20,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/", "/home", "/products", "/products/**", "/css/**", "/js/**", "/images/**", "/cart/**").permitAll()
+                .requestMatchers("/", "/home", "/products", "/products/**", "/css/**", "/js/**", 
+                               "/images/**", "/cart/**", "/register", "/register/**").permitAll()
                 .requestMatchers("/checkout", "/checkout/**").authenticated()
                 .requestMatchers("/products/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
@@ -31,14 +32,12 @@ public class SecurityConfig {
                 .successHandler(authenticationSuccessHandler())
             )
             .logout(logout -> logout
+                .logoutSuccessUrl("/login?logout")
                 .permitAll()
             )
             .exceptionHandling(ex -> ex
                 .accessDeniedPage("/access-denied")
-            )
-            .logout(logout -> logout
-            .logoutSuccessUrl("/login?logout")
-            .permitAll() );
+            );
 
         return http.build();
     }
@@ -48,14 +47,11 @@ public class SecurityConfig {
         return new CustomAuthenticationSuccessHandler();
     }
 
-
     @Bean
-public SpringTemplateEngine templateEngine(ITemplateResolver templateResolver, SpringSecurityDialect sec) {
-    SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-    templateEngine.setTemplateResolver(templateResolver);
-    templateEngine.addDialect(sec);
-    return templateEngine;
-}
-
-    // ...fazer outros beans...
+    public SpringTemplateEngine templateEngine(ITemplateResolver templateResolver, SpringSecurityDialect sec) {
+        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+        templateEngine.setTemplateResolver(templateResolver);
+        templateEngine.addDialect(sec);
+        return templateEngine;
+    }
 }
