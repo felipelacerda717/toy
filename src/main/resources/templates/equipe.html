@@ -1,21 +1,194 @@
-<div class="team-section">
-    <h2>Conheça Nossa Equipe</h2>
-    <div class="team-cards">
-        <div class="card">
-            <img src="enzo.jpg" alt="Foto de Enzo">
-            <h3>Enzo</h3>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nossa Equipe - Loja de Brinquedos</title>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/equipe.css}">
+    
+    <style>
+        /* Estilos inline para garantir que sejam aplicados */
+        .team-section {
+            padding: 50px 0;
+            background-color: #f8f9fa;
+        }
+        
+        .team-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .team-member {
+            flex: 1;
+            min-width: 280px;
+            max-width: 350px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+        
+        .member-image {
+            width: 100%;
+            height: 350px;
+            overflow: hidden;
+        }
+        
+        .member-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .member-info {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .member-info h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .member-info .role {
+            color: #3498db;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        
+        .member-info p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .social-links a {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2c3e50;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background: #3498db;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <nav th:replace="layout :: nav"></nav>
+
+    <div class="team-section">
+        <div class="container text-center mb-5">
+            <h1>Conheça nossa equipe</h1>
+            <p class="lead">Um time apaixonado por tecnologia e desenvolvimento.</p>
         </div>
-        <div class="card">
-            <img src="felipe.jpg" alt="Foto de Felipe">
-            <h3>Felipe</h3>
-        </div>
-        <div class="card">
-            <img src="matheus.jpg" alt="Foto de Matheus">
-            <h3>Matheus</h3>
-        </div>
-        <div class="card">
-            <img src="joao.jpg" alt="Foto de João">
-            <h3>João</h3>
+
+        <div class="team-grid">
+            <!-- Enzo -->
+            <div class="team-member">
+                <div class="member-image">
+                    <img th:src="@{/images/enzo.jpg}" alt="Enzo">
+                </div>
+                <div class="member-info">
+                    <h3>Enzo</h3>
+                    <div class="role">Back-End Developer</div>
+                    <p>Configuração do banco de dados e da lógica de serviço da loja.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Felipe -->
+            <div class="team-member">
+                <div class="member-image">
+                    <img th:src="@{/images/felipe.jpg}" alt="Felipe">
+                </div>
+                <div class="member-info">
+                    <h3>Felipe</h3>
+                    <div class="role">Full Stack Developer</div>
+                    <p>Planejamento e desenvolvimento.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Matheus -->
+            <div class="team-member">
+                <div class="member-image">
+                    <img th:src="@{/images/matheus.jpg}" alt="Matheus">
+                </div>
+                <div class="member-info">
+                    <h3>Matheus</h3>
+                    <div class="role">Front-end Developer</div>
+                    <p>Criação de interfaces responsivas.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- João -->
+            <div class="team-member">
+                <div class="member-image">
+                    <img th:src="@{/images/joao.jpg}" alt="João">
+                </div>
+                <div class="member-info">
+                    <h3>João</h3>
+                    <div class="role">Designer</div>
+                    <p>Designer de templates da loja.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+
+    <div th:replace="layout :: footer"></div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
