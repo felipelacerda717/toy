@@ -1,13 +1,13 @@
 # 🎮 Loja de Brinquedos
 
 ## 📝 Sobre o Projeto
-Uma loja virtual moderna de brinquedos desenvolvida com Spring Boot, oferecendo uma experiência de compra intuitiva e segura. O projeto implementa funcionalidades essenciais de e-commerce, incluindo catálogo de produtos, carrinho de compras, sistema de autenticação e pagamento via PIX.
+Uma loja virtual de brinquedos desenvolvida com Spring Boot. O projeto implementa funcionalidades essenciais de e-commerce, incluindo catálogo de produtos, carrinho de compras, sistema de autenticação e pagamento.
 
 ## ✨ Características Principais
 - 🛍️ Catálogo de produtos com categorização
 - 🛒 Carrinho de compras intuitivo
 - 👤 Sistema de autenticação e autorização
-- 💳 Integração com pagamento PIX
+- 💳 Integração com pagamento
 - 📱 Design responsivo
 - 🔍 Busca de produtos
 - 👥 Área administrativa para gestão de produtos
@@ -18,9 +18,9 @@ Uma loja virtual moderna de brinquedos desenvolvida com Spring Boot, oferecendo 
 - Thymeleaf
 - MySQL
 - Bootstrap
-- HTML/CSS/JavaScript
+- HTML/CSS
 
-## 📊 Diagrama UML Simplificado
+## 📊 Diagrama UML
 
 ```mermaid
 classDiagram
@@ -81,10 +81,10 @@ git clone https://github.com/seu-usuario/toy.git
 4. Acesse: `http://localhost:8080`
 
 ## 👥 Equipe
-- Desenvolvedor Full Stack: Enzo
-- Back-end Developer: Felipe
-- Front-end Developer: Matheus
-- UI/UX Designer: João
+- Desenvolvedor Back-End Stack: Enzo
+- Desenvolvedor Full Stack: Felipe
+- Developer Front-end: Matheus
+- Designer: João
 
 ## 🤝 Contribuindo
 Contribuições são bem-vindas! Sinta-se à vontade para abrir uma issue ou enviar um pull request.
