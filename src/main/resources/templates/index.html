@@ -1,8 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="layout :: head(~{::title})">
-    <title>Bem-vindo à Loja de Brinquedos</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem-vindo à nossa Loja de brinquedos</title>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Seus estilos CSS -->
     <link rel="stylesheet" th:href="@{/css/custom-styles.css}">
+    <link rel="stylesheet" th:href="@{/css/products.css}">
 </head>
 <body>
     <nav th:replace="layout :: nav"></nav>
@@ -10,8 +19,8 @@
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="container">
-            <h1>Bem-vindo à Loja de Brinquedos</h1>
-            <p class="lead">Descubra nossa incrível seleção de brinquedos!</p>
+            <h1>Bem-vindo à nossa Loja de brinquedos</h1>
+            <p class="lead">Descubra nossa seleção de brinquedos!</p>
         </div>
     </section>
 
@@ -19,19 +28,17 @@
     <section class="products-section">
         <div class="container">
             <h2>Produtos mais vendidos</h2>
-            <div class="row">
-                <div class="col-md-4" th:each="product : ${featuredProducts}">
-                    <div class="card product-card">
-                        <div class="card-img-container">
-                            <img th:src="${product.imageUrl}" class="card-img-top" th:alt="${product.name}">
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title" th:text="${product.name}">Nome do Produto</h5>
-                            <p class="price" th:text="${#numbers.formatCurrency(product.price)}">R$ 0,00</p>
-                            <a th:href="@{/products/{id}(id=${product.id})}" class="btn btn-primary">
-                                Ver Detalhes
-                            </a>
-                        </div>
+            <div class="product-grid">
+                <div class="product-item" th:each="product : ${featuredProducts}">
+                    <div class="product-image">
+                        <img th:src="${product.imageUrl}" th:alt="${product.name}">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name" th:text="${product.name}">Nome do Produto</h3>
+                        <p class="product-price" th:text="${#numbers.formatCurrency(product.price)}">R$ 0,00</p>
+                        <a th:href="@{/products/{id}(id=${product.id})}" class="btn-details">
+                            Ver Detalhes
+                        </a>
                     </div>
                 </div>
             </div>
@@ -39,42 +46,41 @@
     </section>
 
     <!-- Categorias -->
-<section class="categories-section">
-    <div class="container">
-        <h2>Explore Nossas Categorias</h2>
-        <div class="row">
-            <div class="col-md-4">
-                <a href="/products?category=Bonecas" class="category-link">
-                    <div class="category-card">
-                        <i class="fas fa-baby"></i>
-                        <h3>Bebês</h3>
-                        <span class="explore-text">Bonecos para bebês →</span>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-4">
-                <a href="/products?category=Jogos" class="category-link">
-                    <div class="category-card">
-                        <i class="fas fa-gamepad"></i>
-                        <h3>Jogos</h3>
-                        <span class="explore-text">Diversão para todos →</span>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-4">
-                <a href="/products?category=Brinquedos" class="category-link">
-                    <div class="category-card">
-                        <i class="fas fa-robot"></i>
-                        <h3>Brinquedos</h3>
-                        <span class="explore-text">O favorito da molecada →</span>
-                    </div>
-                </a>
+    <section class="categories-section">
+        <div class="container">
+            <h2>Explore Nossas Categorias</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <a href="/products?category=Bonecas" class="category-link">
+                        <div class="category-card">
+                            <i class="fas fa-baby"></i>
+                            <h3>Bebês</h3>
+                            <span class="explore-text">Bonecos para bebês →</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="/products?category=Jogos" class="category-link">
+                        <div class="category-card">
+                            <i class="fas fa-gamepad"></i>
+                            <h3>Jogos</h3>
+                            <span class="explore-text">Diversão para todos →</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="/products?category=Brinquedos" class="category-link">
+                        <div class="category-card">
+                            <i class="fas fa-robot"></i>
+                            <h3>Brinquedos</h3>
+                            <span class="explore-text">O favorito da molecada →</span>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
     <footer th:replace="layout :: footer"></footer>
-    <th:block th:replace="layout :: scripts"></th:block>
 </body>
-</html> 
+</html>
